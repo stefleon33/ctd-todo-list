@@ -2,7 +2,7 @@ const TodoForm = () => {
   return (
     <form>
       <label htmlFor="todoTitle">Todo</label>
-      <input id="todoTitle"></input>
+      <input type="text" id="todoTitle"></input>
       <button>Add Todo</button>
     </form>
   );
