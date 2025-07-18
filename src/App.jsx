@@ -4,7 +4,7 @@ import TodoList from './TodoList';
 import TodoForm from './TodoForm';
 
 function App() {
-  const [newTodo, setNewTodo] = useState('Example Text');
+  const [todoList, setTodoList] = useState([]);
 
   return (
     <>
