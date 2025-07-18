@@ -1,4 +1,6 @@
-const TodoForm = () => {
+//handles user input
+import { useRef } from 'react';
+
   return (
     <form>
       <label htmlFor="todoTitle">Todo</label>
