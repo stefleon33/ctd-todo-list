@@ -1,13 +1,27 @@
 //handles user input
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import TextInputWithLabel from '../shared/TextInputWithLabel';
 
-function TodoForm({ onAddTodo }) {
+function TodoForm({ onAddTodo, isSaving }) {
   const todoTitleInput = useRef('');
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [workingTodoTitle, setWorkingTodoTitle] = useState('');
 
+  useEffect(() => {
+    if (workingTodoTitle === '') {
+      if (isButtonDisabled) {
+        return;
+      }
+      setIsButtonDisabled(true);
+    } else {
+      if (!isButtonDisabled) {
+        return;
+      }
+      setIsButtonDisabled(false);
+    }
+  }, [workingTodoTitle, isButtonDisabled]);
+
   function handleAddTodo(event) {
-    //prevents the page from refreshing when the user clicks the Add todo
     event.preventDefault();
 
     onAddTodo(workingTodoTitle);
@@ -25,7 +39,9 @@ function TodoForm({ onAddTodo }) {
         onChange={(event) => setWorkingTodoTitle(event.target.value)}
         ref={todoTitleInput}
       ></TextInputWithLabel>
-      <button disabled={workingTodoTitle.trim() === ''}>Add Todo</button>
+      <button disabled={isButtonDisabled}>
+        {isSaving ? 'Saving...' : 'Add Todo'}
+      </button>
     </form>
   );
 }
