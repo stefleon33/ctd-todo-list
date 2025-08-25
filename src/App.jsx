@@ -141,15 +141,57 @@ function App() {
     }
   };
 
-  function completeTodo(todoId) {
-    const updatedTodos = todoList.map((todo) => {
-      if (todo.id === todoId) {
-        return { ...todo, isCompleted: true };
+  const completeTodo = async (todoId) => {
+    setIsSaving(true);
+    setErrorMessage('');
+
+    const originalTodo = todoList.find((todo) => todo.id === todoId);
+    if (!originalTodo) {
+      setIsSaving(false);
+      return;
+    }
+    setTodoList((prev) =>
+      prev.map((todo) =>
+        todo.id === todoId ? { ...todo, isCompleted: true } : todo
+      )
+    );
+
+    const payload = {
+      records: [
+        {
+          id: todoId,
+          fields: {
+            isCompleted: true,
+          },
+        },
+      ],
+    };
+
+    const options = {
+      method: 'PATCH',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    };
+
+    try {
+      const resp = await fetch(url, options);
+      if (!resp.ok) {
+        throw new Error(`Request failed: ${resp.status} ${resp.statusText}`);
       }
-      return todo;
-    });
-    setTodoList(updatedTodos);
-  }
+    } catch (error) {
+      console.log(error);
+      setErrorMessage(`${error.message}. Reverting todo...`);
+
+      setTodoList((prev) =>
+        prev.map((t) => (t.id === originalTodo.id ? originalTodo : t))
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <>
