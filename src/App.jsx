@@ -78,9 +78,12 @@ function App() {
       }
 
       const { records } = await resp.json();
+      const rec = records?.[0];
+      if (!rec) throw new Error('No record returned from API');
       const savedTodo = {
         id: records[0].id,
-        ...records[0].fields,
+        title: rec.fields?.title ?? rec.fields?.Title ?? '',
+        isCompleted: Boolean(rec.fields?.isCompleted),
       };
       if (!records[0].fields.isCompleted) {
         savedTodo.isCompleted = false;
@@ -93,15 +96,50 @@ function App() {
     }
   };
 
-  function updateTodo(editedTodo) {
-    const updatedTodos = todoList.map((todo) => {
-      if (todo.id === editedTodo.id) {
-        return { ...editedTodo };
+  const updateTodo = async (editedTodo) => {
+    setIsSaving(true);
+    setErrorMessage('');
+
+    const originalTodo = todoList.find((todo) => todo.id === editedTodo.id);
+    const payload = {
+      records: [
+        {
+          id: editedTodo.id,
+          fields: {
+            title: editedTodo.title,
+            isCompleted: editedTodo.isCompleted,
+          },
+        },
+      ],
+    };
+
+    const options = {
+      method: 'PATCH',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    };
+
+    try {
+      const resp = await fetch(url, options);
+      if (!resp.ok) {
+        throw new Error(`Request failed: ${resp.status} ${resp.statusText}`);
       }
-      return todo;
-    });
-    setTodoList(updatedTodos);
-  }
+    } catch (error) {
+      console.log(error);
+      setErrorMessage(`${error.message}. Reverting todo...`);
+      if (originalTodo) {
+        const revertedTodos = todoList.map((todo) =>
+          todo.id === originalTodo.id ? originalTodo : todo
+        );
+        setTodoList(revertedTodos);
+      }
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   function completeTodo(todoId) {
     const updatedTodos = todoList.map((todo) => {

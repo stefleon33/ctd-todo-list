@@ -24,7 +24,7 @@ function TodoForm({ onAddTodo, isSaving }) {
   function handleAddTodo(event) {
     event.preventDefault();
 
-    onAddTodo(workingTodoTitle);
+    onAddTodo({ title: workingTodoTitle.trim(), isCompleted: false });
     setWorkingTodoTitle('');
     //The form retains focus so the user can rapidly enter more todos.
     todoTitleInput.current.focus();
