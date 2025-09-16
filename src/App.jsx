@@ -208,7 +208,10 @@ function App() {
 
   return (
     <>
-      <h1>My Todos</h1>
+      <div className={styles.header}>
+        <img src="/to-do-list.png" alt="Todo icon" />
+        <h1>My Todos</h1>
+      </div>
       <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
       <TodoList
         todoList={todoList}
