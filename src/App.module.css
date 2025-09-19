@@ -1,0 +1,18 @@
+body {
+  display: flex;
+  justify-content: center;
+}
+.error {
+  border: 1px black;
+  padding: 0.5rem;
+}
+
+img {
+  width: 100px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

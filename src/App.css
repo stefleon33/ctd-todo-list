@@ -1,0 +1,19 @@
+body {
+  font-family: cursive;
+  background-color: ghostwhite;
+}
+
+h1 {
+  color: blueviolet;
+  text-align: center;
+}
+
+button {
+  background-color: black;
+  color: aliceblue;
+  margin: 1rem;
+}
+
+form {
+  margin: 1rem;
+}

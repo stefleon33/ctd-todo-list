@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import './App.css';
+import styles from './App.module.css';
 import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
 import TodosViewForm from './features/TodosViewForm';
@@ -207,7 +208,10 @@ function App() {
 
   return (
     <>
-      <h1>My Todos</h1>
+      <div className={styles.header}>
+        <img src="/to-do-list.png" alt="Todo icon" />
+        <h1>My Todos</h1>
+      </div>
       <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
       <TodoList
         todoList={todoList}
@@ -225,7 +229,7 @@ function App() {
         setQueryString={setQueryString}
       />
       {errorMessage ? (
-        <div>
+        <div className={styles.error}>
           <hr />
           <p>{errorMessage}</p>
           <button onClick={() => setErrorMessage('')}>Dismiss</button>

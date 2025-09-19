@@ -1,11 +1,17 @@
 //handles user input
 import { useRef, useState, useEffect } from 'react';
 import TextInputWithLabel from '../shared/TextInputWithLabel';
+import styled from 'styled-components';
 
 function TodoForm({ onAddTodo, isSaving }) {
   const todoTitleInput = useRef('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [workingTodoTitle, setWorkingTodoTitle] = useState('');
+
+  const StyledButton = styled.button`
+    font-style: ${(props) => (props.disabled ? 'italic' : 'normal')};
+    background-color: ${(props) => (props.disabled ? 'gray' : 'black')};
+  `;
 
   useEffect(() => {
     if (workingTodoTitle === '') {
@@ -39,9 +45,9 @@ function TodoForm({ onAddTodo, isSaving }) {
         onChange={(event) => setWorkingTodoTitle(event.target.value)}
         ref={todoTitleInput}
       ></TextInputWithLabel>
-      <button disabled={isButtonDisabled}>
+      <StyledButton disabled={isButtonDisabled}>
         {isSaving ? 'Saving...' : 'Add Todo'}
-      </button>
+      </StyledButton>
     </form>
   );
 }
